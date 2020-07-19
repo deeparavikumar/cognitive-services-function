@@ -14,8 +14,13 @@ public static async Task<IActionResult> Run(HttpRequest request, ILogger log)
     dynamic bodyData = JsonConvert.DeserializeObject(requestBody);
     using (HttpClient client = new HttpClient())
     {
-        client.BaseAddress = new Uri(System.Environment.GetEnvironmentVariable("EndpointUrl", EnvironmentVariableTarget.Process) + "/", UriKind.Absolute);
-        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", System.Environment.GetEnvironmentVariable("EndpointKey", EnvironmentVariableTarget.Process));
+        string EndpointUrl = System.Environment.GetEnvironmentVariable("EndpointUrl", EnvironmentVariableTarget.Process);
+        log.LogInformation("EndpointUrl Variable value:" + EndpointUrl);    
+        string EndpointKey =  System.Environment.GetEnvironmentVariable("EndpointKey", EnvironmentVariableTarget.Process); 
+        log.LogInformation("EndpointKey Variable value:" + EndpointKey);    
+     
+        client.BaseAddress = new Uri(EndpointUrl + "/", UriKind.Absolute);
+        client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", EndpointKey);
         string postBody = JsonConvert.SerializeObject(
             new
             {
